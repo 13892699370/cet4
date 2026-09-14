@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<script>
+!(function(j,a,g){j.__itrace_conf = {bid: 'f43basl8-6nqu7l3w',rel: '0.0.1', spa: true, uid: '', plugins:['jserror','interface','perf','resource','flow','blank']};var b = a.createElement("script");var d = a.getElementsByTagName("script")[0];b.type = "text/javascript";b.crossorigin = true;b.async = true;b.onload = function(){j.__itrace && j.__itrace.setReady()};d.parentNode.insertBefore(b,d);b.src = g})(window, document, "https://g.alicdn.com/woodpeckerx/itrace-next/itrace.iife.js")
+</script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>四级打卡日历 · 新概念第1册 → CET-4</title>
+<style>
+  :root{
+    --bg:#f2f6ff; --card:#ffffff; --ink:#1e293b; --sub:#64748b;
+    --accent:#2563eb; --ok:#10b981; --warn:#f59e0b; --line:#e2e8f0;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;font-family:"PingFang SC","Microsoft YaHei","Helvetica Neue",Arial,sans-serif}
+  body{background:var(--bg);color:var(--ink);padding-bottom:40px}
+  .wrap{max-width:560px;margin:0 auto;padding:16px}
+  header{background:linear-gradient(135deg,#2563eb,#7c3aed);border-radius:18px;color:#fff;padding:20px;margin-bottom:14px}
+  header h1{font-size:20px;margin-bottom:6px}
+  header .sub{font-size:12.5px;opacity:.85}
+  .cd{display:flex;gap:8px;margin-top:14px}
+  .cd .box{flex:1;background:rgba(255,255,255,.16);border-radius:12px;text-align:center;padding:8px 0}
+  .cd .n{font-size:22px;font-weight:700}
+  .cd .l{font-size:11px;opacity:.85}
+  .stats{display:flex;gap:8px;margin-bottom:14px}
+  .stat{flex:1;background:var(--card);border-radius:14px;padding:10px;text-align:center;box-shadow:0 1px 3px rgba(30,41,59,.06)}
+  .stat .n{font-size:19px;font-weight:700;color:var(--accent)}
+  .stat .l{font-size:11px;color:var(--sub);margin-top:2px}
+  .tabs{display:flex;gap:8px;margin-bottom:14px}
+  .tab{flex:1;border:none;background:#e6edfb;color:var(--sub);font-size:14px;padding:10px 0;border-radius:11px;cursor:pointer}
+  .tab.on{background:var(--accent);color:#fff;font-weight:600}
+  .card{background:var(--card);border-radius:16px;padding:16px;box-shadow:0 1px 3px rgba(30,41,59,.06);margin-bottom:14px}
+  .phase{display:inline-block;font-size:11.5px;color:#fff;background:var(--warn);border-radius:20px;padding:3px 10px;margin-bottom:10px}
+  .lesson-chip{background:#eef2ff;color:var(--accent);border-radius:10px;padding:8px 12px;font-size:13.5px;margin-bottom:12px}
+  .task{display:flex;align-items:flex-start;gap:10px;padding:11px 0;border-bottom:1px dashed var(--line)}
+  .task:last-child{border-bottom:none}
+  .task input{width:19px;height:19px;margin-top:2px;accent-color:var(--ok);cursor:pointer;flex-shrink:0}
+  .task .t{font-size:14px;line-height:1.45}
+  .task.done .t{color:#94a3b8;text-decoration:line-through}
+  .checkin{width:100%;border:none;border-radius:12px;padding:13px;font-size:15px;font-weight:600;cursor:pointer;margin-top:10px;background:var(--accent);color:#fff}
+  .checkin.on{background:#d1fae5;color:#065f46}
+  .calhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+  .calhead b{font-size:15.5px}
+  .calhead button{border:1px solid var(--line);background:#fff;border-radius:8px;padding:4px 12px;cursor:pointer;color:var(--sub);font-size:15px}
+  .grid7{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+  .wd{text-align:center;font-size:11px;color:var(--sub);padding:2px 0}
+  .day{min-height:46px;border-radius:10px;border:1px solid var(--line);background:#fff;font-size:12px;position:relative;cursor:pointer;padding:4px}
+  .day.blank{border:none;background:none;cursor:default}
+  .day.future{color:#b6c2d6;background:#f8fafc}
+  .day.today{outline:2px solid var(--accent);outline-offset:-1px}
+  .day.ok{background:var(--ok);color:#fff;border-color:var(--ok)}
+  .day .n{font-weight:600}
+  .day .k{position:absolute;bottom:2px;right:4px;font-size:10px}
+  .legend{font-size:11px;color:var(--sub);margin-top:10px;display:flex;gap:14px}
+  .legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:4px;vertical-align:-1px}
+  .pl h3{font-size:15px;margin:14px 0 6px}
+  .pl h3:first-child{margin-top:0}
+  .pl .dates{font-size:12px;color:var(--sub);margin-bottom:6px}
+  .pl ul{padding-left:18px;font-size:13px;line-height:1.8;color:#334155}
+  .tip{background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;padding:10px 12px;font-size:12.5px;color:#9a3412;margin-top:12px;line-height:1.7}
+  .set{display:flex;gap:10px;align-items:center;font-size:13px;flex-wrap:wrap}
+  .set input{border:1px solid var(--line);border-radius:8px;padding:5px 8px;font-size:13px}
+  .set button{border:1px solid #fecaca;background:#fff;color:#dc2626;border-radius:8px;padding:5px 10px;font-size:12px;cursor:pointer}
+  .foot{font-size:11px;color:#94a3b8;text-align:center;margin-top:8px;line-height:1.7}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>🎯 英语四级打卡日历</h1>
+    <div class="sub">零基础 · 新概念英语第1册 → 2026年12月 CET-4（425分过关）</div>
+    <div class="cd">
+      <div class="box"><div class="n" id="cdDays">--</div><div class="l">距考试天数</div></div>
+      <div class="box"><div class="n" id="cdRate">--</div><div class="l">已坚持完成率</div></div>
+      <div class="box"><div class="n" id="cdNeed">--</div><div class="l">还需坚持天数</div></div>
+    </div>
+  </header>
+
+  <div class="stats">
+    <div class="stat"><div class="n" id="sStreak">0</div><div class="l">连续打卡(天)</div></div>
+    <div class="stat"><div class="n" id="sTotal">0</div><div class="l">累计打卡(天)</div></div>
+    <div class="stat"><div class="n" id="sLesson">-</div><div class="l">今日应学课文</div></div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab on" data-v="today">今日任务</button>
+    <button class="tab" data-v="cal">日历打卡</button>
+    <button class="tab" data-v="plan">总计划</button>
+  </div>
+
+  <div id="viewToday">
+    <div class="card">
+      <span class="phase" id="phaseTag"></span>
+      <div class="lesson-chip" id="lessonChip" style="display:none"></div>
+      <div id="taskList"></div>
+      <button class="checkin" id="btnCheckin"></button>
+    </div>
+    <div class="card" style="padding:12px 16px">
+      <div class="set">
+        <span>考试日</span><input type="date" id="inExam">
+        <span>开课日</span><input type="date" id="inStart">
+        <button id="btnReset">清空数据</button>
+      </div>
+    </div>
+    <div class="card">
+      <div style="font-size:14px;font-weight:600;margin-bottom:8px">☁️ 进度同步到 GitHub（私有 Gist）</div>
+      <div class="set">
+        <span>Token</span><input type="password" id="inToken" placeholder="仅含 gist 权限的 PAT" style="flex:1;min-width:150px">
+        <button id="btnSaveToken" style="border:1px solid var(--line);background:#fff;color:var(--accent)">保存</button>
+      </div>
+      <div class="set" style="margin-top:10px">
+        <button id="btnPush" style="border:1px solid var(--line);background:var(--accent);color:#fff">上传进度 → GitHub</button>
+        <button id="btnPull" style="border:1px solid var(--line);background:#fff;color:var(--ink)">从 GitHub 恢复</button>
+      </div>
+      <div id="syncStatus" style="font-size:12px;color:var(--sub);margin-top:8px">未配置 Token：进度只存本机浏览器。</div>
+    </div>
+  </div>
+
+  <div id="viewCal" style="display:none">
+    <div class="card">
+      <div class="calhead">
+        <button id="prevM">‹</button>
+        <b id="calTitle"></b>
+        <button id="nextM">›</button>
+      </div>
+      <div class="grid7" id="calGrid"></div>
+      <div class="legend">
+        <span><i style="background:var(--ok)"></i>已打卡</span>
+        <span><i style="outline:2px solid var(--accent)"></i>今天</span>
+        <span>点击某天可手动补卡/取消</span>
+      </div>
+    </div>
+  </div>
+
+  <div id="viewPlan" style="display:none">
+    <div class="card pl">
+      <h3>📘 阶段一 · 新概念第一册打底（9/14 – 11/2，7周）</h3>
+      <div class="dates">目标：学完《新概念英语》第1册全部144课，词汇量 0 → 1000+</div>
+      <ul>
+        <li>每天 <b>2 课</b>（前30课很短，越往后越长；周日晚只复习不学新课，作为机动缓冲）</li>
+        <li>每课流程：听音频 → 跟读 → 背单词 → 看懂语法点 → 抄写一遍句子</li>
+        <li>每天听力跟读 30 分钟（第1册课文音频，练耳朵适应连读弱读）</li>
+        <li>配套：手机装一个背单词App，用「新概念第1词库」同步刷词</li>
+      </ul>
+      <h3>📗 阶段二 · 四级核心词 + 语法（11/3 – 11/30，4周）</h3>
+      <div class="dates">目标：拿下四级高频词 2000 + 核心语法框架</div>
+      <ul>
+        <li>每天核心词汇 <b>60 个</b>（只背四级高频词表，不背偏词）+ 隔日复盘前3天错词</li>
+        <li>每天精读 1 篇四级真题阅读（先做题后精读，逐句弄懂）</li>
+        <li>每天精练听力 30 分钟（Section A 短对话 + 新闻，四级听力占35%是重中之重）</li>
+        <li>语法每周 1–2 个专题：时态 → 被动 → 定语从句 → 名词性从句 → 非谓语</li>
+      </ul>
+      <h3>📕 阶段三 · 真题冲刺（12/1 – 考前）</h3>
+      <div class="dates">目标：成套刷真题，摸透考试节奏</div>
+      <ul>
+        <li>隔天一整套真题（严格计时 125 分钟），另一天订正：错题逐句弄懂 + 摘出生词</li>
+        <li>作文：背 10 个万能句型，每周自己写 2 篇（翻译同理，占15%）</li>
+        <li>听力：每天考前磨耳朵 30 分钟，用真题音频倍速（1.2x）练习</li>
+        <li>考前一周：只看错题本、单词错词和作文模板</li>
+      </ul>
+      <div class="tip">
+        ⏰ <b>报名提醒：</b>12月四级报名一般就在 <b>9月中下旬</b>，跟着学校教务通知走，别错过！错过就只能等明年6月。<br>
+        📊 <b>分值结构：</b>写作15% + 听力35% + 阅读35% + 翻译15%，总分710，425为通行合格线。听力阅读合计70%，把分砸在这两项上。<br>
+        ⚠️ 零基础14周冲四级是极限操作，每天 2.5 小时以上是硬要求。若中途某天实在没时间，勾选已完成任务后照常打卡，别让连续记录断掉——断打卡是放弃的第一步。
+      </div>
+    </div>
+    <div class="foot">进度实时保存在当前浏览器本地；在「今日任务」页配置 GitHub Token 后，每次打卡自动同步到你的私有 Gist，换设备点「从 GitHub 恢复」即可接着打卡。</div>
+  </div>
+</div>
+
+<script>
+"use strict";
+var CFG_KEY = "***";
+var def = { examDate: "2026-12-19", startDate: "2026-09-14", checks: {} };
+var cfg = loadCfg();
+
+function loadCfg() {
+  try {
+    var s = localStorage.getItem(CFG_KEY);
+    if (s) { var o = JSON.parse(s); return { examDate: o.examDate || def.examDate, startDate: o.startDate || def.startDate, checks: o.checks || {} }; }
+  } catch (e) {}
+  return JSON.parse(JSON.stringify(def));
+}
+function saveCfg() {
+  try { localStorage.setItem(CFG_KEY, JSON.stringify(cfg)); } catch (e) {}
+  scheduleSync();
+}
+
+/* ---------- GitHub Gist 同步（Token 仅存本机浏览器，绝不写进文件） ---------- */
+var GK = { token: "***", gist: "cet4_gist_id" };
+function gToken() { try { return localStorage.getItem(GK.token) || ""; } catch (e) { return ""; } }
+function gId() { try { return localStorage.getItem(GK.gist) || ""; } catch (e) { return ""; } }
+function setSyncMsg(t, color) { var el = document.getElementById("syncStatus"); if (el) { el.textContent = t; el.style.color = color || "var(--sub)"; } }
+function syncOn() { return !!(gToken() && gId()); }
+
+/* 合并策略：打卡记录取本地与远端的并集（谁打过都算打过），配置以本地为准 */
+function mergeCfg(remote) {
+  var out = { examDate: cfg.examDate, startDate: cfg.startDate, checks: {} };
+  var r = (remote && remote.checks) || {};
+  Object.keys(cfg.checks).forEach(function (k) { out.checks[k] = cfg.checks[k]; });
+  Object.keys(r).forEach(function (k) {
+    var a = out.checks[k], b = r[k];
+    if (!a) out.checks[k] = b;
+    else {
+      var tasks = {};
+      Object.keys(a.tasks || {}).forEach(function (t) { tasks[t] = true; });
+      Object.keys(b.tasks || {}).forEach(function (t) { tasks[t] = true; });
+      out.checks[k] = { tasks: tasks, done: !!(a.done || b.done) };
+    }
+  });
+  return out;
+}
+
+function apiGitHub(path, method, token, body) {
+  return fetch("https://api.github.com" + path, {
+    method: method,
+    headers: { "Authorization": "Bearer " + token, "Content-Type": "application/json", "Accept": "application/vnd.github+json" },
+    body: body ? JSON.stringify(body) : undefined
+  }).then(function (res) {
+    if (!res.ok) throw new Error("GitHub 返回 " + res.status + (res.status === 401 ? "（Token 无效或缺 gist 权限）" : ""));
+    return res.status === 204 ? null : res.json();
+  });
+}
+
+var syncTimer = null, syncing = false;
+function scheduleSync() { if (!syncOn()) return; clearTimeout(syncTimer); syncTimer = setTimeout(pushToGitHub, 1500); }
+
+/* 换设备时自动查找云端存档：遍历自己的 Gist，找到含 cet4-checkin.json 的那个 */
+function ensureGistId() {
+  if (gId()) return Promise.resolve(gId());
+  if (!gToken()) return Promise.resolve("");
+  return apiGitHub("/gists?per_page=100", "GET", gToken()).then(function (list) {
+    for (var i = 0; i < (list || []).length; i++) {
+      if (list[i].files && list[i].files["cet4-checkin.json"]) {
+        localStorage.setItem(GK.gist, list[i].id);
+        return list[i].id;
+      }
+    }
+    return "";
+  });
+}
+
+function pushToGitHub(silent) {
+  if (!gToken()) { if (!silent) setSyncMsg("请先保存 Token", "#dc2626"); return; }
+  if (syncing) return;
+  ensureGistId().then(function (id) {
+    if (syncing) return null;
+    syncing = true;
+    var tk = gToken();
+    var files = { "cet4-checkin.json": { content: JSON.stringify(cfg) } };
+    return id ? apiGitHub("/gists/" + id, "PATCH", tk, { files: files })
+              : apiGitHub("/gists", "POST", tk, { description: "CET-4 打卡数据(勿删)", public: false, files: files });
+  }).then(function (g) {
+    if (g === null) { syncing = false; return; }
+    if (g && g.id && !gId()) localStorage.setItem(GK.gist, g.id);
+    syncing = false;
+    setSyncMsg("✅ 已同步到 GitHub · " + new Date().toLocaleTimeString(), "var(--ok)");
+  }).catch(function (e) { syncing = false; setSyncMsg("❌ 同步失败：" + e.message, "#dc2626"); });
+}
+
+function pullFromGitHub() {
+  if (!gToken()) { setSyncMsg("请先保存 Token", "#dc2626"); return; }
+  setSyncMsg("正在从 GitHub 恢复…");
+  ensureGistId().then(function (id) {
+    if (!id) throw new Error("云端还没有存档，请先在常用设备上点「上传进度」");
+    return apiGitHub("/gists/" + id, "GET", gToken());
+  }).then(function (g) {
+      var f = g.files && g.files["cet4-checkin.json"];
+      if (!f || !f.content) throw new Error("云端文件为空");
+      var remote = JSON.parse(f.content);
+      cfg = mergeCfg(remote);
+      try { localStorage.setItem(CFG_KEY, JSON.stringify(cfg)); } catch (e) {}
+      renderToday(); renderStats(); renderCal();
+      setSyncMsg("✅ 已恢复并合并云端进度", "var(--ok)");
+    })
+    .catch(function (e) { syncing = false; setSyncMsg("❌ 恢复失败：" + e.message, "#dc2626"); });
+}
+
+function pad(n) { return n < 10 ? "0" + n : "" + n; }
+function dk(d) { return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()); }
+function parse(s) { var p = s.split("-"); return new Date(+p[0], +p[1] - 1, +p[2]); }
+function days(a, b) { return Math.round((parse(b) - parse(a)) / 86400000); }
+var TODAY = dk(new Date());
+
+var P1_END = "2026-11-02", P2_END = "2026-11-30", NCE_TOTAL = 144;
+function phaseOf(ds) {
+  if (ds <= P1_END) return 1;
+  if (ds <= P2_END) return 2;
+  return 3;
+}
+function nceLessons(ds) {
+  var idx = Math.max(1, days(cfg.startDate, ds) + 1);
+  var a = Math.min(NCE_TOTAL, 2 * idx - 1), b = Math.min(NCE_TOTAL, 2 * idx);
+  return { idx: idx, a: a, b: b };
+}
+function tasksFor(ds) {
+  var ph = phaseOf(ds);
+  if (ph === 1) {
+    var L = nceLessons(ds);
+    var base = [
+      { id: "nce", t: "学新课：新概念第1册 第" + L.a + (L.a !== L.b ? "–" + L.b : "") + "课（课文+单词+语法）" },
+      { id: "lis", t: "听力跟读 30 分钟（今日课文音频）" },
+      { id: "word", t: "背今日课文学过的单词，遮住中文能说出英文" },
+      { id: "rev", t: "复习昨日课文：朗读一遍 + 错词过一遍" }
+    ];
+    if (L.a > NCE_TOTAL) { base[0].t = "第1册已完结！今天起滚动复习，或提前进入四级核心词"; }
+    if (new Date().getDay() === 0) { base[0].t = "周日机动：只复习本周课文和单词，不学新课"; base[0].id = "sun"; }
+    return { ph: 1, name: "阶段一 · 新概念第1册打底", list: base };
+  }
+  if (ph === 2) {
+    return { ph: 2, name: "阶段二 · 四级核心词 + 语法", list: [
+      { id: "word60", t: "背四级核心词 60 个（新词）" },
+      { id: "read", t: "精读 1 篇四级真题阅读（做题 + 逐句弄懂）" },
+      { id: "lis", t: "听力精练 30 分钟（短对话/新闻，逐句听写弱项）" },
+      { id: "gram", t: "语法专题 1 节（长难句拆解）" },
+      { id: "rev", t: "复盘前 3 天错词" }
+    ]};
+  }
+  return { ph: 3, name: "阶段三 · 真题冲刺", list: [
+    { id: "paper", t: "真题：单数日整套计时模考 / 双数日深度订正" },
+    { id: "word", t: "复盘试卷生词 + 核心词复习 50 个" },
+    { id: "lis", t: "听力 1.2 倍速磨耳朵 30 分钟" },
+    { id: "write", t: "作文：背 1 个模板句型 或 写 1 篇（交替）" }
+  ]};
+}
+function dayRec(ds) { if (!cfg.checks[ds]) cfg.checks[ds] = { tasks: {}, done: false }; return cfg.checks[ds]; }
+function taskCount(ds) { var t = tasksFor(ds); return t.list.length; }
+function doneCount(ds) { var r = cfg.checks[ds]; if (!r) return 0; var t = tasksFor(ds); var n = 0; t.list.forEach(function (x) { if (r.tasks[x.id]) n++; }); return n; }
+
+/* ---------- 今日任务 ---------- */
+function renderToday() {
+  var info = tasksFor(TODAY);
+  document.getElementById("phaseTag").textContent = info.name;
+  var L = nceLessons(TODAY), chip = document.getElementById("lessonChip");
+  if (info.ph === 1 && L.a <= NCE_TOTAL) {
+    chip.style.display = "";
+    var left = Math.max(0, NCE_TOTAL - L.b);
+    chip.innerHTML = "📖 今日新概念进度：第 <b>" + L.a + (L.a !== L.b ? "–" + L.b : "") + "</b> 课（第 " + L.idx + " 天）· 剩余 " + left + " 课 · 已走完 " + Math.round(L.b / NCE_TOTAL * 100) + "%";
+    document.getElementById("sLesson").textContent = L.a === L.b ? "L" + L.a : "L" + L.a + "-" + L.b;
+  } else {
+    chip.style.display = "none";
+    document.getElementById("sLesson").textContent = info.ph === 1 ? "L" + L.a : "冲刺期";
+  }
+  var rec = dayRec(TODAY), box = document.getElementById("taskList");
+  box.innerHTML = "";
+  info.list.forEach(function (x) {
+    var d = document.createElement("div");
+    d.className = "task" + (rec.tasks[x.id] ? " done" : "");
+    d.innerHTML = '<input type="checkbox" ' + (rec.tasks[x.id] ? "checked" : "") + '><div class="t">' + x.t + "</div>";
+    d.querySelector("input").addEventListener("change", function () {
+      rec.tasks[x.id] = this.checked;
+      var all = info.list.every(function (y) { return rec.tasks[y.id]; });
+      if (all) rec.done = true;
+      saveCfg(); renderToday(); renderStats();
+    });
+    box.appendChild(d);
+  });
+  var btn = document.getElementById("btnCheckin");
+  var n = doneCount(TODAY), total = taskCount(TODAY);
+  if (rec.done) { btn.textContent = "✅ 今日已打卡（点此可取消）"; btn.className = "checkin on"; }
+  else { btn.textContent = "📌 打卡（已完成 " + n + "/" + total + " 项）"; btn.className = "checkin"; }
+  btn.onclick = function () { rec.done = !rec.done; if (rec.done) info.list.forEach(function (x) { rec.tasks[x.id] = true; }); saveCfg(); renderToday(); renderStats(); };
+}
+
+/* ---------- 统计 ---------- */
+function renderStats() {
+  var total = Object.keys(cfg.checks).filter(function (k) { return cfg.checks[k].done && k <= TODAY; }).length;
+  var streak = 0, d = new Date();
+  if (!cfg.checks[dk(d)] || !cfg.checks[dk(d)].done) d.setDate(d.getDate() - 1);
+  while (true) {
+    var k = dk(d);
+    if (k < cfg.startDate) break;
+    if (cfg.checks[k] && cfg.checks[k].done) { streak++; d.setDate(d.getDate() - 1); } else break;
+  }
+  document.getElementById("sStreak").textContent = streak;
+  document.getElementById("sTotal").textContent = total;
+  var toExam = days(TODAY, cfg.examDate);
+  var elapsed = Math.max(1, days(cfg.startDate, TODAY) + 1);
+  var planDays = Math.max(1, days(cfg.startDate, cfg.examDate) + 1);
+  document.getElementById("cdDays").textContent = Math.max(0, toExam);
+  document.getElementById("cdRate").textContent = Math.min(100, Math.round(total / Math.min(elapsed, planDays) * 100)) + "%";
+  document.getElementById("cdNeed").textContent = Math.max(0, toExam);
+}
+
+/* ---------- 日历 ---------- */
+var calMonth = new Date(); calMonth.setDate(1);
+function renderCal() {
+  var y = calMonth.getFullYear(), m = calMonth.getMonth();
+  document.getElementById("calTitle").textContent = y + "年" + (m + 1) + "月";
+  var grid = document.getElementById("calGrid");
+  grid.innerHTML = "";
+  ["一", "二", "三", "四", "五", "六", "日"].forEach(function (w) {
+    var e = document.createElement("div"); e.className = "wd"; e.textContent = w; grid.appendChild(e);
+  });
+  var first = new Date(y, m, 1), offset = (first.getDay() + 6) % 7;
+  for (var i = 0; i < offset; i++) { var b = document.createElement("div"); b.className = "day blank"; grid.appendChild(b); }
+  var last = new Date(y, m + 1, 0).getDate();
+  for (var dnum = 1; dnum <= last; dnum++) {
+    (function (dnum) {
+      var dstr = y + "-" + pad(m + 1) + "-" + pad(dnum);
+      var e = document.createElement("div");
+      var cls = ["day"];
+      if (cfg.checks[dstr] && cfg.checks[dstr].done) cls.push("ok");
+      if (dstr === TODAY) cls.push("today");
+      if (dstr > TODAY) cls.push("future");
+      e.className = cls.join(" ");
+      var mark = "";
+      if (dstr > cfg.startDate && (dstr <= TODAY || dstr === TODAY)) {
+        var n = doneCount(dstr), tt = taskCount(dstr);
+        if (cfg.checks[dstr] && cfg.checks[dstr].done) mark = "✔";
+        else if (n > 0) mark = n + "/" + tt;
+      }
+      e.innerHTML = '<div class="n">' + dnum + "</div><span class=\"k\">" + mark + "</span>";
+      e.onclick = function () {
+        if (dstr > TODAY) return;
+        if (dstr < cfg.startDate) return;
+        var r = dayRec(dstr);
+        r.done = !r.done;
+        if (r.done) tasksFor(dstr).list.forEach(function (x) { r.tasks[x.id] = true; });
+        saveCfg(); renderCal(); renderStats(); renderToday();
+      };
+      grid.appendChild(e);
+    })(dnum);
+  }
+}
+document.getElementById("prevM").onclick = function () { calMonth.setMonth(calMonth.getMonth() - 1); renderCal(); };
+document.getElementById("nextM").onclick = function () { calMonth.setMonth(calMonth.getMonth() + 1); renderCal(); };
+
+/* ---------- 标签页 ---------- */
+Array.prototype.forEach.call(document.querySelectorAll(".tab"), function (btn) {
+  btn.onclick = function () {
+    Array.prototype.forEach.call(document.querySelectorAll(".tab"), function (b) { b.className = "tab"; });
+    btn.className = "tab on";
+    var v = btn.getAttribute("data-v");
+    document.getElementById("viewToday").style.display = v === "today" ? "" : "none";
+    document.getElementById("viewCal").style.display = v === "cal" ? "" : "none";
+    document.getElementById("viewPlan").style.display = v === "plan" ? "" : "none";
+    if (v === "cal") renderCal();
+  };
+});
+
+/* ---------- 设置 ---------- */
+function fillSettings() {
+  document.getElementById("inExam").value = cfg.examDate;
+  document.getElementById("inStart").value = cfg.startDate;
+}
+document.getElementById("inExam").addEventListener("change", function () {
+  if (this.value) { cfg.examDate = this.value; saveCfg(); renderStats(); renderCal(); }
+});
+document.getElementById("inStart").addEventListener("change", function () {
+  if (this.value) { cfg.startDate = this.value; saveCfg(); renderToday(); renderStats(); renderCal(); }
+});
+document.getElementById("btnReset").addEventListener("click", function () {
+  if (confirm("确定清空所有打卡记录？不可恢复。")) { cfg.checks = {}; saveCfg(); renderToday(); renderStats(); renderCal(); }
+});
+document.getElementById("btnSaveToken").addEventListener("click", function () {
+  var v = document.getElementById("inToken").value.trim();
+  if (!v) { setSyncMsg("Token 为空", "#dc2626"); return; }
+  localStorage.setItem(GK.token, v);
+  if (gId()) pushToGitHub();
+  else setSyncMsg("Token 已保存。点「上传进度 → GitHub」创建云端存档", "var(--ok)");
+});
+document.getElementById("btnPush").addEventListener("click", function () { pushToGitHub(false); });
+document.getElementById("btnPull").addEventListener("click", pullFromGitHub);
+
+if (gToken()) document.getElementById("inToken").value = gToken();
+if (gToken()) { ensureGistId().then(function (id) { if (id) pullFromGitHub(); else setSyncMsg("Token 就绪，点「上传进度 → GitHub」创建云端存档", "var(--ok)"); }); }
+
+fillSettings(); renderToday(); renderStats(); renderCal();
+</script>
+</body>
+</html>
