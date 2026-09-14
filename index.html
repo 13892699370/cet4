@@ -104,16 +104,18 @@
       </div>
     </div>
     <div class="card">
-      <div style="font-size:14px;font-weight:600;margin-bottom:8px">☁️ 进度同步到 GitHub（私有 Gist）</div>
-      <div class="set">
-        <span>Token</span><input type="password" id="inToken" placeholder="仅含 gist 权限的 PAT" style="flex:1;min-width:150px">
-        <button id="btnSaveToken" style="border:1px solid var(--line);background:#fff;color:var(--accent)">保存</button>
+      <div style="font-size:14px;font-weight:600;margin-bottom:8px">☁️ 进度云同步 <span id="btnShowCfg" style="display:none;font-size:12px;font-weight:400;color:var(--accent);cursor:pointer;float:right">设置</span></div>
+      <div id="syncConfig">
+        <div class="set">
+          <span>Token</span><input type="password" id="inToken" placeholder="GitHub Personal Access Token" style="flex:1;min-width:150px">
+          <button id="btnSaveToken" style="border:1px solid var(--line);background:#fff;color:var(--accent)">保存</button>
+        </div>
+        <div class="set" style="margin-top:10px">
+          <button id="btnPush" style="border:1px solid var(--line);background:var(--accent);color:#fff">上传进度 → GitHub</button>
+          <button id="btnPull" style="border:1px solid var(--line);background:#fff;color:var(--ink)">从 GitHub 恢复</button>
+        </div>
       </div>
-      <div class="set" style="margin-top:10px">
-        <button id="btnPush" style="border:1px solid var(--line);background:var(--accent);color:#fff">上传进度 → GitHub</button>
-        <button id="btnPull" style="border:1px solid var(--line);background:#fff;color:var(--ink)">从 GitHub 恢复</button>
-      </div>
-      <div id="syncStatus" style="font-size:12px;color:var(--sub);margin-top:8px">未配置 Token：进度只存本机浏览器。</div>
+      <div id="syncStatus" style="font-size:12px;color:var(--sub);margin-top:8px">未配置：进度只存本机浏览器。</div>
     </div>
   </div>
 
@@ -458,14 +460,32 @@ document.getElementById("btnSaveToken").addEventListener("click", function () {
   var v = document.getElementById("inToken").value.trim();
   if (!v) { setSyncMsg("Token 为空", "#dc2626"); return; }
   localStorage.setItem(GK.token, v);
-  if (gId()) pushToGitHub();
-  else setSyncMsg("Token 已保存。点「上传进度 → GitHub」创建云端存档", "var(--ok)");
+  document.getElementById("inToken").value = v;
+  setSyncMsg("正在连接云端…");
+  pushToGitHub(true); collapseSync();
 });
 document.getElementById("btnPush").addEventListener("click", function () { pushToGitHub(false); });
 document.getElementById("btnPull").addEventListener("click", pullFromGitHub);
+document.getElementById("btnShowCfg").addEventListener("click", function () {
+  var box = document.getElementById("syncConfig");
+  box.style.display = box.style.display === "none" ? "" : "none";
+});
+
+function collapseSync() {
+  if (gToken() && !sessionStorage.getItem("cet4_showcfg")) {
+    document.getElementById("syncConfig").style.display = "none";
+    document.getElementById("btnShowCfg").style.display = "";
+  }
+}
 
 if (gToken()) document.getElementById("inToken").value = gToken();
-if (gToken()) { ensureGistId().then(function (id) { if (id) pullFromGitHub(); else setSyncMsg("Token 就绪，点「上传进度 → GitHub」创建云端存档", "var(--ok)"); }); }
+if (gToken()) {
+  ensureGistId().then(function (id) {
+    if (id) { pullFromGitHub(); }
+    else { pushToGitHub(true); }
+    collapseSync();
+  });
+}
 
 fillSettings(); renderToday(); renderStats(); renderCal();
 </script>
