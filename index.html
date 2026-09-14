@@ -471,6 +471,17 @@ document.getElementById("btnShowCfg").addEventListener("click", function () {
   box.style.display = box.style.display === "none" ? "" : "none";
 });
 
+/* 一次性链接自动配置：打开 https://.../#ghp_xxxxxx 即自动读取 Token 并抹掉地址栏（# 后内容不会发送到服务器，不进任何代码仓库） */
+(function () {
+  try {
+    var m = (location.hash || "").match(/gh[pousr]_[A-Za-z0-9]{20,}/);
+    if (m) {
+      localStorage.setItem(GK.token, m[0]);
+      history.replaceState(null, "", location.pathname + location.search);
+    }
+  } catch (e) {}
+})();
+
 function collapseSync() {
   if (gToken() && !sessionStorage.getItem("cet4_showcfg")) {
     document.getElementById("syncConfig").style.display = "none";
